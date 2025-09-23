@@ -43,3 +43,5 @@
 - macOS (OpenGL 지원)
 - Xcode Command Line Tools
 - Homebrew (의존성 설치용)
+
+
