@@ -6,36 +6,67 @@
 #include <iostream>
 #include <cmath>
 
+GLfloat len = 50.0f;
+GLint factor = 1;
+GLushort pattern = 0x5555;
 
 void RenderScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glRotatef(45, 1.0f, 0.0f, 0.0f);
+    glRotatef(45, 0.0f, 1.0f, 0.0f);
 
-    // 첫 번째 삼각형 - 빨간색 (채우기)
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(0.0f, 50.0f, 0.0f);    // 위 (반시계 방향으로 정의)
-        glVertex3f(-40.0f, -30.0f, 0.0f); // 왼쪽 아래
-        glVertex3f(40.0f, -30.0f, 0.0f);  // 오른쪽 아래
+    glLineWidth(2.0f);
+
+    // 보이지 않는 뒷면 모서리 (점선)
+    glEnable(GL_LINE_STIPPLE);
+    glLineStipple(factor, pattern);
+    glBegin(GL_LINES);
+    // 뒤쪽 왼쪽 세로선
+    glVertex3f(-len, -len, -len);
+    glVertex3f(-len, len, -len);
+    // 뒤쪽 위 가로선
+    glVertex3f(-len, len, -len);
+    glVertex3f(len, len, -len);
+    // 왼쪽 아래 깊이선
+    glVertex3f(-len, -len, len);
+    glVertex3f(-len, -len, -len);
     glEnd();
+    glDisable(GL_LINE_STIPPLE);
 
-    // 두 번째 삼각형 - 초록색 (와이어프레임)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(-80.0f, 50.0f, 0.0f);   // 위
-        glVertex3f(-80.0f, 0.0f, 0.0f);    // 왼쪽 아래
-        glVertex3f(-40.0f, 0.0f, 0.0f);    // 오른쪽 아래
+    // 보이는 모서리 (실선)
+    glBegin(GL_LINES);
+    // 앞면 사각형
+    glVertex3f(-len, -len, len);
+    glVertex3f(len, -len, len);
+    glVertex3f(len, -len, len);
+    glVertex3f(len, len, len);
+    glVertex3f(len, len, len);
+    glVertex3f(-len, len, len);
+    glVertex3f(-len, len, len);
+    glVertex3f(-len, -len, len);
+
+    // 오른쪽 면 세로선 2개
+    glVertex3f(len, -len, len);
+    glVertex3f(len, -len, -len);
+    glVertex3f(len, len, len);
+    glVertex3f(len, len, -len);
+
+    // 아래 면 가로선
+    glVertex3f(-len, -len, -len);
+    glVertex3f(len, -len, -len);
+
+    // 위 면 깊이선
+    glVertex3f(-len, len, len);
+    glVertex3f(-len, len, -len);
+    glVertex3f(len, len, len);
+    glVertex3f(len, len, -len);
+
+    // 뒤쪽 오른쪽 세로선
+    glVertex3f(len, -len, -len);
+    glVertex3f(len, len, -len);
     glEnd();
-
-    // 세 번째 삼각형 - 파란색 (채우기로 다시 변경)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(80.0f, 50.0f, 0.0f);    // 위
-        glVertex3f(40.0f, 0.0f, 0.0f);     // 왼쪽 아래
-        glVertex3f(80.0f, 0.0f, 0.0f);     // 오른쪽 아래
-    glEnd();
-
+    glPopMatrix();
     glFlush();
 }
 
