@@ -1,7 +1,9 @@
 // ----------------------------
-// 이 예제는 OpenGL에서 두 빨간 점 [(0, 0, 0), (50, 50, 50)]을 glBegin~glEnd 블록 내에서 한 번에 그리는 예제입니다.
-// (참고: (0,0,0) 점이 안보이면, 투영/좌표계 또는 z 값 범위를 확인하세요. 아래에서는 z=0 평면과 z=50 평면에 점을 찍습니다.)
-// "50,50,50" 점이 보이는데 "0,0,0" 점이 안보인다면, glOrtho의 zNear, zFar 값을 더 넓게 잡아야 합니다.
+// 학습 주제: 직선 그리기 (점들의 집합)
+// 핵심 개념:
+// 1. 선형 보간 (Linear Interpolation)
+//    P(t) = (1-t)*Start + t*End  (0 <= t <= 1)
+// 2. 반복문을 통해 t값을 0에서 1로 증가시키며 중간 점들을 계산하여 찍음
 // ----------------------------
 
 #ifdef __APPLE__
@@ -14,12 +16,23 @@
 void RenderScene(void) {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor3f(1.0f, 0.0f, 0.0f); // 빨간색으로 설정
-    glPointSize(8.0f); // 점이 더 잘 보이도록 크기 증가
+    glColor3f(1.0f, 0.0f, 0.0f); 
+    glPointSize(2.0f);
 
     glBegin(GL_POINTS);
-        glVertex3f(0.0f, 0.0f, 0.0f);          // (0,0,0) 점
-        glVertex3f(50.0f, 50.0f, 50.0f);       // (50,50,50) 점
+    
+    // 시작점(0,0,0) ~ 끝점(50,50,50) 사이를 20등분하여 점을 찍음
+    // 결과적으로 점선 형태의 직선이 그려짐
+    for (int i = 0; i <= 20; ++i) {
+        float t = i / 20.0f; // t는 0.0 ~ 1.0 사이의 값
+        
+        // P = Start + t * (End - Start) 공식 적용 (Start=0 이므로 간단화됨)
+        float x = 50.0f * t;
+        float y = 50.0f * t;
+        float z = 50.0f * t;
+        
+        glVertex3f(x, y, z);
+    }
     glEnd();
 
     glFlush();
@@ -27,24 +40,20 @@ void RenderScene(void) {
 
 void SetupRc(void)
 {
-    std::cout << "SetupRc" << std::endl;
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 void ChangeSize(GLsizei w, GLsizei h) {
-    GLint wSize = 100;    // 가상의 논리 좌표계 절반 길이
+    GLint wSize = 100;
     GLfloat aspectRatio;
 
-    if (h == 0) {
-        h = 1;
-    }
+    if (h == 0) h = 1;
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     aspectRatio = (GLfloat)w / (GLfloat)h;
 
-    // zNear/zFar 값을 (예: -100~+100)처럼 좌표 범위를 충분히 넓게 잡으면 두 점이 모두 보인다.
     if (w <= h) {
         glOrtho(-wSize, wSize, -wSize / aspectRatio, wSize / aspectRatio, -100, 100);
     } else {
@@ -60,7 +69,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(400, 400);
-    glutCreateWindow("Point Drawing Example (점 그리기 예제)");
+    glutCreateWindow("Draw Line with Points");
 
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glutDisplayFunc(RenderScene);

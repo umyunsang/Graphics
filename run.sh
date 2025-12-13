@@ -17,7 +17,7 @@ echo "Compiling: $CPP_FILE"
 echo "Executable: $EXECUTABLE_NAME"
 
 # C++ 파일 컴파일
-if g++ -o "$EXECUTABLE_NAME" "$CPP_FILE" -framework GLUT -framework OpenGL 2>/dev/null; then
+if g++ -o "$EXECUTABLE_NAME" "$CPP_FILE" -framework GLUT -framework OpenGL; then
     echo "Compile success!"
     echo "Running..."
     echo "----------------------------------------"

@@ -1,7 +1,9 @@
-// gl triangle fan을 이용하여 원그리기
-// 원점 포함 17점 (16조각) 사용
-// 각각의 면은 빨간색 초록색 번갈아 사용
-
+// ----------------------------
+// 학습 주제: 피자 원 그리기 (기본)
+// 핵심 개념:
+// 1. GL_TRIANGLE_FAN 기본 사용법
+// 2. 색상 교차 (if count % 2 == 0)
+// ----------------------------
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -20,14 +22,12 @@ void RenderScene(void) {
     int count = 0;
 
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(0.0f, 0.0f);
+        glVertex2f(0.0f, 0.0f); // 중심점
 
+        // 16조각으로 나눔
         for (angle = 0.0f; angle <= 2.0f * PI + 0.01f; angle += (2.0f * PI) / 16.0f) {
-            if (count % 2 == 0) {
-                glColor3f(1.0f, 0.0f, 0.0f);
-            } else {
-                glColor3f(0.0f, 1.0f, 0.0f);
-            }
+            if (count % 2 == 0) glColor3f(1.0f, 0.0f, 0.0f); // 빨강
+            else                glColor3f(0.0f, 1.0f, 0.0f); // 초록
 
             x = 50.0f * cos(angle);
             y = 50.0f * sin(angle);
@@ -43,12 +43,8 @@ void ChangeSize(GLsizei w, GLsizei h) {
     GLint wSize = 100;
     GLfloat aspectRatio;
 
-    if (h == 0) {
-        h = 1;
-    }
-
+    if (h == 0) h = 1;
     glViewport(0, 0, w, h);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -66,26 +62,19 @@ void ChangeSize(GLsizei w, GLsizei h) {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-
     glutInitWindowSize(500, 500);
-
     glutInitWindowPosition(400, 400);
-
-    glutCreateWindow("GL_TRIANGLE_FAN Circle");
+    glutCreateWindow("Simple Pizza Circle");
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glShadeModel(GL_FLAT);
 
     glutDisplayFunc(RenderScene);
-
     glutReshapeFunc(ChangeSize);
 
-    std::cout << "GL_TRIANGLE_FAN으로 원 그리기" << std::endl;
-
+    std::cout << "Basic GL_TRIANGLE_FAN Example" << std::endl;
 
     glutMainLoop();
-
     return 0;
 }
